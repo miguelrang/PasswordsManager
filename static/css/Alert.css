@@ -1,0 +1,28 @@
+.success {
+  background-color: green;
+  color: white;
+}
+
+.error {
+  background-color: rgb(230, 0, 0);
+  color: white;
+}
+
+.warning {
+  background-color: rgb(217, 160, 17);
+  color: white;
+}
+
+.info {
+  background-color: rgb(17, 217, 133);
+  color: white;
+}
+
+.close {
+  float: right;
+  font-size: 25px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  line-height: 1;
+}
