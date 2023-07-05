@@ -69,7 +69,7 @@ class InformationForm(FlaskForm):
     new_password1 = PasswordField("Nueva Contraseña", validators=[validators.Length(min=8)])
     new_password2 = PasswordField("Confirmar Nueva Contraseña", validators=[validators.Length(min=8)])
     upd_password = SubmitField("Actualizar")
-    
+
     # delete account
     confirm = StringField("Escriba 'Eliminar mi cuenta'")
     password = PasswordField("Contraseña", validators=[validators.Length(min=8)])
@@ -182,7 +182,7 @@ def login_validate() -> redirect or render_template:
 def getSalt() -> bytes:
     """ Random characters to 'complete' the password.
     """
-        return os.urandom(16)
+    return os.urandom(16)
 
 
 def getHash(password:str, salt:bytes) -> bytes:
@@ -372,14 +372,14 @@ def alter_account():
                             WHERE username = ? AND ID_account != ?;
                             ''', (username, str(decoded_token["id"]))
                         ).fetchone()
-     
+
                     if not exist:
-                        with sqlite3.connect('PasswordManager.db') as db:    
+                        with sqlite3.connect('PasswordManager.db') as db:
                             db.execute(
                                 '''
                                 UPDATE Account
                                         SET username=?
-                                    WHERE ID_account=?;    
+                                    WHERE ID_account=?;
                                 ''',(username, str(decoded_token["id"]))
                             )
                             db.commit()
@@ -446,7 +446,7 @@ def alter_account():
                                             '''
                                                 UPDATE Account
                                                     SET password=?
-                                                WHERE ID_account=?;    
+                                                WHERE ID_account=?;
                                             ''',(new_password, str(decoded_token["id"]))
                                         )
 
@@ -499,7 +499,7 @@ def alter_account():
                 ###        flash(
                 ###            "La nueva contraseña debe de tener al menos 8 caracteres",
                 ###            "warning"
-                ###        ) 
+                ###        )
             # DELETE
             elif "del_account" in request.form:
                 confirm = sanitize(request.form.get('confirm'))
@@ -624,13 +624,13 @@ def add_passwords() -> redirect:
                 for passw in all_passwords:
                     if passw[1] == key:
                         to_continue = False
-                
+
                 if to_continue:
                     with sqlite3.connect('PasswordManager.db') as db:
                         db.execute(
                             """
                                 INSERT INTO Password(ID_account, key, value)
-                                VALUES(?, ?, ?); 
+                                VALUES(?, ?, ?);
                             """, (str(decoded_token["id"]), key, cipher_suite.encrypt(value.encode()))
                         )
                         db.commit()
@@ -639,7 +639,7 @@ def add_passwords() -> redirect:
                         "Esta clave ya esta registrada. Por favor, intente con otra",
                         "warning"
                     )
-            
+
             else:
                 flash(token_response[0], token_response[1])
         else:
@@ -648,7 +648,7 @@ def add_passwords() -> redirect:
 
             else:
                 flash("Ah ocurrido un error inesperado. Verifique que los campos se hayan llenado correctamente.", "error")
-        
+
         return redirect(url_for('index'))
     else:
         abort(403)
@@ -661,7 +661,7 @@ def clipboard() -> jsonify:
     if request.method == "POST":
         encrypted:bytes = request.get_json().get('content').encode()
         decrypted:str = cipher_suite.decrypt(encrypted).decode()
-        
+
         return jsonify({"value": decrypted})
     else:
         abort(403)
