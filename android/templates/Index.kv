@@ -1,0 +1,110 @@
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import Gradient kivy_gradient.Gradient
+
+
+Index:
+    id: login
+    name: 'login'
+
+    MDFloatLayout:
+        cols: 1
+        md_bg_color: (.8, 0, 0, 1)
+
+        #canvas.before:
+        #    Rectangle:
+        #        pos: self.size[0], self.size[1]/2
+        #        size: self.size
+        #        texture: Gradient.horizontal(get_color_from_hex("FF0000"), get_color_from_hex("640000")) # 2B5876
+
+        BoxLayout:
+            orientation: 'vertical'
+            pos_hint: {"center_x": .4+.1, "center_y": .4+.1}
+
+            FloatLayout:
+                cols: 1
+                size_hint_y: .85
+                pos_hint: {'center_x': .4, 'center_y': 1}
+                #md_bg_color: 1, 0, 0, 1
+
+                canvas.before:
+                    Color:
+                        rgba: (38/255, 49/255, 63/255, 1) # (.8, 0, 0, .87)
+
+                    Ellipse:
+                        size: self.size[0]*1.2, self.size[1]*2
+                        pos: self.pos
+                        #texture: Gradient.horizontal(get_color_from_hex("204A5D"), get_color_from_hex("04213D"))
+
+                Image:
+                    source: 'images/logo.png'
+                    allow_stretch: True
+                    pos_hint: {'center_x': .6, 'center_y': .5}
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(5), dp(15), dp(5), dp(15)
+                spacing: dp(5)
+
+                MDLabel:
+                    text: '[b][color=#FFFFFF][size=30]Passwords Manager[/size][/color][/b]'
+                    #size_hint_y: .85
+                    markup: True
+                    halign: 'left'
+                    valign: 'center'
+
+                MDGridLayout:
+                    cols: 1
+                    spacing: dp(5)
+                    #padding: dp(0), dp(50), dp(0), dp(1)
+
+                    TextField:
+                        id: username
+                        name: 'username'
+
+                        hint: 'Nombre de Usuario'
+                        #focus: True
+                        sc: "login"
+                        actual: {"name": self.name, "field": self.ids.input}
+                        fields: [username.ids.input, passw.ids.input]
+                        data: {"user": f"{username.content}", "password": f"{passw.content}"}
+                        action: "login"
+
+                    TextField:
+                        id: passw
+                        name: 'passw'
+
+                        hint: 'Contraseña'
+                        is_password: True
+                        sc: "login"
+                        actual: {"name": self.name, "field": self.ids.input}
+                        fields: [username.ids.input, passw.ids.input]
+                        data: {"user": f"{username.content}", "password": f"{passw.content}"}
+                        action: "login"
+
+                    RoundedButton:
+                        text: 'Iniciar Sesion'
+                        md_bg_color: (34/255, 98/255, 103/255, 1)
+                        on_press:
+                            load = Thread(target=app.loading, args=(loading,))
+                            load.start()
+                        on_release:
+                            signin = Thread(target=root.login_validate, args=({"user": f"{username.content}", "password": f"{passw.content}"},))
+                            signin.start()
+
+                MDFloatLayout:
+                    cols: 1
+
+                    RoundedButtonOutline:
+                        text: 'Registrarse'
+                        line_color: (1, 1, 1, 1)
+                        size_hint_y: .25
+                        pos_hint: {'center_x': .5, 'top': .2}
+                        on_release: app.root.current = 'signup'
+
+        MDSpinner:
+            id: loading
+            name: "loading"
+
+            active: False
+            size_hint: None, None
+            size: dp(44+1), dp(44+1)
+            pos_hint: {"center_x": .4+.1, "center_y": .4+.1}

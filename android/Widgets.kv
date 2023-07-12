@@ -1,0 +1,173 @@
+#: import Thread threading.Thread
+
+
+<TextField@MDFloatLayout>:
+    cols: 1
+
+    content: str()
+    hint: str() # alter text
+    focus: False
+    is_password: False
+    sc: str()
+    actual: dict()
+    fields: list()
+    data: dict()
+    action: str()
+
+    canvas.before:
+        Color:
+            rgba: (34/255, 98/255, 103/255, 1)
+        Line:
+            rounded_rectangle: [self.pos[0], self.pos[1], self.size[0], self.size[1], 10, 10, 10, 10]
+            width: 1.05
+
+        Color:
+            rgba: (1, 1 , 1, 1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+
+    TextInput:
+        id: input
+
+        on_text: root.content = self.text
+        focus: root.focus
+        hint_text: root.hint
+        multiline: False
+        password: root.is_password
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        background_color: (0, 0, 0, 0)
+        on_text_validate: app.on_text_validate(app.root.get_screen(root.sc), root.actual, root.fields, root.data, root.action)
+        on_focus:
+            #if input.focus == True and app.root.get_screen(root.sc).actual == None:\
+            #app.root.get_screen(root.sc).actual = self
+            #if input.focus == True and app.actual != None:\
+            #app.on_focus(input)
+            #elif input.focus == False and input.text == "":\
+            #self.focus = True
+            #if self.focus == False:\
+            #app.root.get_screen(root.sc).on_text_validate(root.actual, root.fields, root.data, root.action)
+
+<RoundedButton@Button>:
+    md_bg_color: (0, 0, 0, 0)
+    #line_color: (0, 0, 0, 0)
+    background_color: (0, 0, 0, 0)
+    on_press: self.background_color = (0, 0, 0, .7)
+    on_release: self.background_color = (0, 0, 0, 0)
+
+    canvas.before:
+        #Color:
+        #    rgba: root.line_color
+        #Line:
+        #    rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 10, 10, 10, 10
+
+        Color:
+            rgba: root.md_bg_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+
+<RoundedButtonOutline@Button>:
+    line_color: (0, 0, 0, 0)
+    color: root.line_color
+    background_color: (0, 0, 0, 0)
+    on_press: self.background_color = (0, 0, 0, .7)
+    on_release: self.background_color = (0, 0, 0, 0)
+
+    canvas.before:
+        Color:
+            rgba: root.line_color
+
+        Line:
+            rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], 10, 10, 10, 10
+
+
+<Password@MDBoxLayout>:
+    orientation: "horizontal"
+    padding: dp(4+1), dp(8), dp(4+1), dp(8)
+    spacing: dp(4+1)
+    #md_bg_color: (1, 0, 0, 1)
+
+    key: ""
+    value: ""
+    MDGridLayout:
+        cols: 2
+        size_hint_x: 2
+        spacing: dp(4+1)
+
+        MDFloatLayout:
+            cols: 1
+
+            canvas.before:
+                Color:
+                    rgba: (0, 0, 0, 1)
+                Line:
+                    rounded_rectangle: [self.pos[0], self.pos[1], self.size[0], self.size[1], 10, 10, 10, 10]
+                    width: 1.05
+
+                Color:
+                    rgba: (.9, .9, .9, 1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+
+            TextInput:
+                id: key
+
+                text: root.key
+                #mode: "fill"
+                disabled: True
+                multiline: False
+                pos_hint: {"center_x": .4+.1, "center_y": .4+.1}
+                background_color: (0, 0, 0, 0)
+
+        MDFloatLayout:
+            cols: 1
+
+            canvas.before:
+                Color:
+                    rgba: (0, 0, 0, 1)
+                Line:
+                    rounded_rectangle: [self.pos[0], self.pos[1], self.size[0], self.size[1], 10, 10, 10, 10]
+                    width: 1.05
+
+                Color:
+                    rgba: (.9, .9, .9, 1)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+
+            TextInput:
+                id: value
+
+                text: root.value
+                #mode: "fill"
+                password: True
+                disabled: True
+                multiline: False
+                background_color: (0, 0, 0, 0)
+                pos_hint: {"center_x": .4+.1, "center_y": .4+.1}
+
+    MDGridLayout:
+        cols: 2
+        spacing: dp(4+1)
+
+        RoundedButton:
+            text: 'Copiar'
+            md_bg_color: (34/255, 98/255, 103/255, 1)
+            on_press:
+                load = Thread(target=app.loading, args=(app.root.get_screen("pm").ids.loading,))
+                load.start()
+            on_release:
+                delete = Thread(target=app.root.get_screen("pm").copyClipboard, args=(value.text,))
+                delete.start()
+
+        RoundedButtonOutline:
+            text: "Eliminar"
+            line_color: (0, 0, 0, 1)
+            on_press:
+                load = Thread(target=app.loading, args=(app.root.get_screen("pm").ids.loading,))
+                load.start()
+            on_release:
+                delete = Thread(target=app.root.get_screen("pm").delPassword, args=(key.text,))
+                delete.start()
