@@ -1,9 +1,16 @@
 argon2_cffi==20.1.0
 bleach==3.3.0
+clipboard==0.0.4
 cryptography==40.0.1
 email_validator==2.0.0.post2
 Flask==2.2.3
+Flask_RESTful==0.3.10
 Flask_WTF==1.1.1
+Kivy==2.2.0
+kivymd==0.104.2
 PyJWT==2.7.0
 PyJWT==2.7.0
+pyperclip==1.8.2
+Requests==2.31.0
+user_agents==2.2.0
 WTForms==3.0.1
