@@ -84,7 +84,7 @@ class Passwords(Resource):
         id:str = data["id"]
         token:str = data["token"]
         token_response = valid_token(token, token_key)
-        if token_response == True: #nalgon
+        if token_response == True:
             decoded_token = jwt.decode(token, token_key, algorithms=['HS256'])
             if str(decoded_token["id"]) == id:
                 with sqlite3.connect("PasswordManager.db") as db:
